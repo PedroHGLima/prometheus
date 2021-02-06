@@ -12,19 +12,21 @@ We should include some description here.
 
 Download the prometheus local image to your home:
 ```bash
-singularity pull docker://jodafons/prometheus:base
+singularity pull docker://jodafons/ringer:base
 ```
 
 After donwload it, just execute the `run` command:
 ```bash
-singularity run prometheus_base.sif
+singularity run --nv ringer_base.sif
 ```
-**NOTE**: Use `--nv` after `run` argument to attach the gpu into the container if you have it.
+**NOTE**: The argument `--nv` is responsible to attach the gpu into the container if you have it.
 
 Inside of the singularity enviroment, just setup all prometheus dependencies using:
 ```bash
-source /setup_here.sh
+source /setup_all_here.sh ringer-atlas
 ```
+
+## Install by hand:
 
 After that, you can download the prometheus repository into your home:
 
@@ -36,6 +38,8 @@ and install it:
 cd prometheus && mkdir build && cd build && cmake .. && make && cd ..
 source setup.sh
 ```
+
+**NOTE**: Need to have ROOT and Gaugi installed.
 
 ## Framework status:
 
