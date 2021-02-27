@@ -81,6 +81,8 @@ elif args.doZee or args.doJpsi:
   pidname = 'el_lhmedium'
 elif args.doZrad:
   pidname = 'ph_medium'
+elif args.doFakes:
+  pidname = '!ph_loose'
 else:
   pidname = 'el_lhmedium'
 
@@ -95,11 +97,11 @@ elif args.doJpsi:
     evt.setCutValue( EtCutType.OfflineAbove, 2 )
     ToolSvc += evt
 elif args.doZrad:
-    # evt.setCutValue( SelectionType.SelectionPID, pidname )
+    evt.setCutValue( SelectionType.SelectionPID, pidname )
     evt.setCutValue( EtCutType.L2CaloAbove , 15)
     ToolSvc += evt
 elif args.doFakes:
-	# evt.setCutValue( SelectionType.SelectionPID, pidname )
+    evt.setCutValue( SelectionType.SelectionPID, pidname )
     evt.setCutValue( EtCutType.L2CaloAbove , 15)
     ToolSvc += evt
 else:

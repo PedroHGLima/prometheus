@@ -108,15 +108,14 @@ class Collector( Algorithm ):
                                 'deltaPhi2Rescaled',
                                 'DeltaPOverP',
 
-                                # extra for boosted
-                                'deltaR', # for boosted 
-                                'eeMass', # for boosted
                                 ] )
 
 
     
     if self._dataframe is DataframeEnum.Electron_v1:
       self._event_label.extend( [
+                                'deltaR', #for boosted
+                                'eeMass', #for boosted
                                 # Offline variables
                                 'el_lhtight',
                                 'el_lhmedium',
@@ -171,6 +170,7 @@ class Collector( Algorithm ):
       elCont    = context.getHandler( "PhotonContainer" )
       trkCont   = None
       hasTrack  = False
+      hasFcTrack = False
 
     eventInfo = context.getHandler( "EventInfoContainer" )
     fc        = context.getHandler( "HLT__TrigEMClusterContainer" )
