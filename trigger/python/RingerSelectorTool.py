@@ -73,8 +73,9 @@ class RingerSelectorTool(Algorithm):
     # Threshold model class
     #
     class Threshold(object):
-      def __init__( self, slope, offset, etmin, etmax, etamin, etamax):
+      def __init__( self, slope, offset, etmin, etmax, etamin, etamax, max_avgmu):
         self.slope=slope; self.offset=offset; self._etmin=etmin; self._etmax=etmax; self._etamin=etamin; self._etamax=etamax
+        self.max_avgmu = max_avgmu
       def etmin(self):
         return self._etmin
       def etmax(self):
@@ -84,6 +85,7 @@ class RingerSelectorTool(Algorithm):
       def etamax(self):
         return self._etamax
       def __call__(self, avgmu):
+        avgmu = self.max_avgmu if avgmu>self.max_avgmu else avgmu
         return avgmu*self.slope + self.offset
 
 
@@ -116,7 +118,7 @@ class RingerSelectorTool(Algorithm):
       self.__models.append(model)
 
     number_of_thresholds = env.GetValue("Threshold__size", 0)
-    self.__maxAverageMu = env.GetValue("Threshold__MaxAverageMu", 0)
+    max_avgmu = treat_float( env, "Threshold__MaxAverageMu" )
     etmin_list = treat_float( env, 'Threshold__etmin' )
     etmax_list = treat_float( env, 'Threshold__etmax' )
     etamin_list = treat_float( env, 'Threshold__etamin' )
@@ -126,13 +128,13 @@ class RingerSelectorTool(Algorithm):
 
 
     for idx, slope in enumerate(slopes):
-      threshold = Threshold( slope, offsets[idx], etmin_list[idx], etmax_list[idx], etamin_list[idx], etamax_list[idx] )
+      threshold = Threshold( slope, offsets[idx], etmin_list[idx], etmax_list[idx], etamin_list[idx],
+                             etamax_list[idx], max_avgmu[idx] )
       self.__thresholds.append(threshold)
 
     MSG_INFO( self, "Tuning version: %s" , version )
     MSG_INFO( self, "Loaded %d models for inference." , number_of_models)
     MSG_INFO( self, "Loaded %d threshold for decision" , number_of_thresholds)
-    MSG_INFO( self, "Max Average mu equal %1.2f", self.__maxAverageMu )
 
 
     return StatusCode.SUCCESS
@@ -149,7 +151,6 @@ class RingerSelectorTool(Algorithm):
     eta = abs(fc.eta())
     if eta>2.5: eta=2.5
     et = fc.et()*1e-3 # in GeV
-    if avgmu > self.__maxAverageMu: avgmu = self.__maxAverageMu
 
     # get the model for inference
     model = self.__getModel(et,eta)
