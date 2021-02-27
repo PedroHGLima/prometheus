@@ -453,7 +453,7 @@ def installLowEnergyElectronL2CaloRingerSelector_v1():
 
   from TrigEgammaEmulationTool import RingerSelectorTool
   import os
-  calibpath = os.environ['PRT_PATH'] + '/trigger/data/jpsiee/TrigL2_20200805_v1'
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/jpsi/TrigL2_20210227_v1'
 
 
   def getPatterns( context ):
