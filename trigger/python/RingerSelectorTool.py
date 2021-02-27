@@ -112,7 +112,7 @@ class RingerSelectorTool(Algorithm):
 
     for idx, path in enumerate( paths ):
       path = path.replace('.onnx','')
-      model = Model( basepath+'/models/'+path, etmin_list[idx], etmax_list[idx], etamin_list[idx], etamax_list[idx])
+      model = Model( basepath+'/'+path, etmin_list[idx], etmax_list[idx], etamin_list[idx], etamax_list[idx])
       self.__models.append(model)
 
     number_of_thresholds = env.GetValue("Threshold__size", 0)
