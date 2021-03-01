@@ -9,6 +9,8 @@ from EventAtlas import Accept
 import numpy as np
 import tensorflow as tf
 
+import os 
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
 #
 # Hypo tool
