@@ -14,8 +14,8 @@ from prometheus import Dataframe as DataframeEnum
 
 
 # tool includes
-from PileupCorrectionTools.utilities import RetrieveBinningIdx
-from ProfileTools.constants import *
+from EventSelectionTool import RetrieveBinningIdx
+from ProfileTools.analysis.constants import *
 from ROOT import TH1F
 from functools import reduce
 from itertools import product
@@ -106,27 +106,28 @@ class ImpactTool( Algorithm ):
           for selection in self.__selections:
             # hold binning name
             binning_name = ('et%d_eta%d') % (etBinIdx,etaBinIdx)
-
-
+              
             dirname = basepath+'/'+selection_name+'/'+binning_name+'/'+selection
             sg.mkdir( dirname )
-            sg.addHistogram(TH1F('et',('%s;%s;Count')%(basicInfoQuantities['et'],basicInfoQuantities['et']),
-             basicInfoNBins['et'],basicInfoLowerEdges['et'],basicInfoHighEdges['et']) )
-            sg.addHistogram(TH1F('eta',('%s;%s;Count')%(basicInfoQuantities['eta'],basicInfoQuantities['eta']),
+            sg.addHistogram(TH1F('et', ('%s;%s;Count')%(basicInfoQuantities['et'],basicInfoQuantities['et']),
+            basicInfoNBins['et'],basicInfoLowerEdges['et'],basicInfoHighEdges['et']) )
+            sg.addHistogram(TH1F('eta' , ('%s;%s;Count')%(basicInfoQuantities['eta'],basicInfoQuantities['eta']),
                             len(etabins)-1, np.array(etabins)) )
-            sg.addHistogram(TH1F('phi',('%s;%s;Count')%(basicInfoQuantities['phi'],basicInfoQuantities['phi']),
+            sg.addHistogram(TH1F('phi', ('%s;%s;Count')%(basicInfoQuantities['phi'],basicInfoQuantities['phi']),
                             20, -3.2, 3.2) )
-            sg.addHistogram(TH1F('avgmu',('%s;%s;Count')%(basicInfoQuantities['avgmu'],basicInfoQuantities['avgmu']),
+            sg.addHistogram(TH1F('avgmu', ('%s;%s;Count')%(basicInfoQuantities['avgmu'],basicInfoQuantities['avgmu']),
                             16,0,80) )
-            sg.addHistogram(TH1F('nvtx',('%s;%s;Count')%(basicInfoQuantities['nvtx'],basicInfoQuantities['nvtx']),
+            sg.addHistogram(TH1F('nvtx', ('%s;%s;Count')%(basicInfoQuantities['nvtx'],basicInfoQuantities['nvtx']),
                             len(nvtx_bins)-1,np.array(nvtx_bins)) )
 
-            for key in standardQuantitiesNBins.keys():
-              sg.addHistogram(TH1F(key, 
-                ('%s;%s;Count')%(electronQuantities[key],electronQuantities[key]),
-                standardQuantitiesNBins[key],
-                standardQuantitiesLowerEdges[key],
-                standardQuantitiesHighEdges[key]))
+            # we want measure this
+            for itype in ['off', 'hlt']:
+              for key in standardQuantitiesNBins.keys():
+                sg.addHistogram(TH1F('%s_%s' %(itype, key), 
+                  ('%s;%s;Count')%(electronQuantities[key],electronQuantities[key]),
+                  standardQuantitiesNBins[key],
+                  standardQuantitiesLowerEdges[key],
+                  standardQuantitiesHighEdges[key]))
 
             # loop over selections
 
@@ -149,17 +150,26 @@ class ImpactTool( Algorithm ):
 
     # Retrieve container
     if self._dataframe is DataframeEnum.Electron_v1:
-      elCont    = context.getHandler( "ElectronContainer" )
+      off_elCont    = context.getHandler( "ElectronContainer" )
+      hlt_elCont    = context.getHandler( "HLT__ElectronContainer" )
     elif self._dataframe is DataframeEnum.Photon_v1:
       elCont    = context.getHandler( "PhotonContainer" )
     else:
       elCont    = context.getHandler( "ElectronContainer" )
     
     evt = context.getHandler( "EventInfoContainer" )
-    eta = math.fabs(elCont.eta())
-    et = elCont.et()/GeV
-    track = elCont.trackParticle()
+    eta = math.fabs(off_elCont.eta())
+    et = off_elCont.et()/GeV
     
+    # get tracks containers
+    # Retrieve container
+    if self._dataframe is DataframeEnum.Electron_v1:
+      off_track = off_elCont.trackParticle()
+      hlt_track = hlt_elCont.trackParticle()
+      track = True
+    elif self._dataframe is DataframeEnum.Photon_v1:
+      track = False
+
     dec = context.getHandler( "MenuContainer" )
 
     evt = context.getHandler("EventInfoContainer")
@@ -196,28 +206,47 @@ class ImpactTool( Algorithm ):
         pw=1
         # Fill basic infos
         sg.histogram(dirname+'/et').Fill(et,pw)
-        sg.histogram(dirname+'/eta').Fill(elCont.eta(),pw)
-        sg.histogram(dirname+'/phi').Fill(elCont.phi(),pw)
+        sg.histogram(dirname+'/eta').Fill(off_elCont.eta(),pw)
+        sg.histogram(dirname+'/phi').Fill(off_elCont.phi(),pw)
         sg.histogram(dirname+'/avgmu').Fill(evt.avgmu(),pw)
         sg.histogram(dirname+'/nvtx').Fill(evt.nvtx(),pw)
         # Fill shower shapes
-        sg.histogram(dirname+'/f1').Fill(elCont.f1(),pw)
-        sg.histogram(dirname+'/f3').Fill(elCont.f3(),pw)
-        sg.histogram(dirname+'/weta2').Fill(elCont.weta2(),pw)
-        sg.histogram(dirname+'/wtots1').Fill(elCont.wtots1(),pw)
-        sg.histogram(dirname+'/reta').Fill(elCont.reta(),pw)
-        sg.histogram(dirname+'/rhad').Fill(elCont.rhad(),pw)
-        sg.histogram(dirname+'/rphi').Fill(elCont.rphi(),pw)
-        sg.histogram(dirname+'/eratio').Fill(elCont.eratio(),pw)
-        sg.histogram(dirname+'/deltaEta1').Fill(elCont.deltaEta1(),pw)
-        sg.histogram(dirname+'/deltaPhiRescaled2').Fill(elCont.deltaPhiRescaled2(),pw)
+        # off
+        sg.histogram(dirname+'/off_f1').Fill(off_elCont.f1(),pw)
+        sg.histogram(dirname+'/off_f3').Fill(off_elCont.f3(),pw)
+        sg.histogram(dirname+'/off_weta2').Fill(off_elCont.weta2(),pw)
+        sg.histogram(dirname+'/off_wtots1').Fill(off_elCont.wtots1(),pw)
+        sg.histogram(dirname+'/off_reta').Fill(off_elCont.reta(),pw)
+        sg.histogram(dirname+'/off_rhad').Fill(off_elCont.rhad(),pw)
+        sg.histogram(dirname+'/off_rphi').Fill(off_elCont.rphi(),pw)
+        sg.histogram(dirname+'/off_eratio').Fill(off_elCont.eratio(),pw)
+        sg.histogram(dirname+'/off_deltaEta1').Fill(off_elCont.deltaEta1(),pw)
+        sg.histogram(dirname+'/off_deltaPhiRescaled2').Fill(off_elCont.deltaPhiRescaled2(),pw)
+        # hlt
+        sg.histogram(dirname+'/hlt_f1').Fill(hlt_elCont.f1(),pw)
+        sg.histogram(dirname+'/hlt_f3').Fill(hlt_elCont.f3(),pw)
+        sg.histogram(dirname+'/hlt_weta2').Fill(hlt_elCont.weta2(),pw)
+        sg.histogram(dirname+'/hlt_wtots1').Fill(hlt_elCont.wtots1(),pw)
+        sg.histogram(dirname+'/hlt_reta').Fill(hlt_elCont.reta(),pw)
+        sg.histogram(dirname+'/hlt_rhad').Fill(hlt_elCont.rhad(),pw)
+        sg.histogram(dirname+'/hlt_rphi').Fill(hlt_elCont.rphi(),pw)
+        sg.histogram(dirname+'/hlt_eratio').Fill(hlt_elCont.eratio(),pw)
+        sg.histogram(dirname+'/hlt_deltaEta1').Fill(hlt_elCont.deltaEta1(),pw)
+        sg.histogram(dirname+'/hlt_deltaPhiRescaled2').Fill(hlt_elCont.deltaPhiRescaled2(),pw)
         # Fill track variables
         if track:
-          sg.histogram(dirname+'/trackd0pvunbiased').Fill(track.d0(),pw)
-          sg.histogram(dirname+'/d0significance').Fill(track.d0significance(),pw)
-          sg.histogram(dirname+'/eProbabilityHT').Fill(track.eProbabilityHT(),pw)
-          sg.histogram(dirname+'/TRT_PID').Fill(track.trans_TRT_PID(),pw)
-          sg.histogram(dirname+'/DeltaPOverP').Fill(track.DeltaPOverP(),pw)
+          # off
+          sg.histogram(dirname+'/off_trackd0pvunbiased').Fill(off_track.d0(),pw)
+          sg.histogram(dirname+'/off_d0significance').Fill(off_track.d0significance(),pw)
+          sg.histogram(dirname+'/off_eProbabilityHT').Fill(off_track.eProbabilityHT(),pw)
+          sg.histogram(dirname+'/off_TRT_PID').Fill(off_track.trans_TRT_PID(),pw)
+          sg.histogram(dirname+'/off_DeltaPOverP').Fill(off_track.DeltaPOverP(),pw)
+          # hlt
+          sg.histogram(dirname+'/hlt_trackd0pvunbiased').Fill(hlt_track.d0(),pw)
+          sg.histogram(dirname+'/hlt_d0significance').Fill(hlt_track.d0significance(),pw)
+          sg.histogram(dirname+'/hlt_eProbabilityHT').Fill(hlt_track.eProbabilityHT(),pw)
+          sg.histogram(dirname+'/hlt_TRT_PID').Fill(hlt_track.trans_TRT_PID(),pw)
+          sg.histogram(dirname+'/hlt_DeltaPOverP').Fill(hlt_track.DeltaPOverP(),pw)
      
 
     return StatusCode.SUCCESS

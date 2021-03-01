@@ -197,7 +197,7 @@ class Chain( Algorithm ):
 
 
     if self.__trigInfo.signature() == 'electron':
-      cont = context.getHandler("HLT__FastElectronContainer")
+      cont = context.getHandler("HLT__TrigElectronContainer")
     else:
       cont = context.getHandler("HLT__PhotonContainer")
 
