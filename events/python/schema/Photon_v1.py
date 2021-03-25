@@ -194,6 +194,8 @@ def Photon_v1():
 	    bool                mc_isTruthElectronFromW{};
 	    bool                mc_isTruthElectronFromJpsi{};
 	    bool                mc_isTruthElectronAny{};
+	    bool                mc_isTruthJetFromAny{};
+	    bool                mc_isTruthPhotonFromAny{};
 
 
 	};
