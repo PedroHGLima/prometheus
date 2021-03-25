@@ -129,6 +129,12 @@ class ImpactTool( Algorithm ):
                   standardQuantitiesLowerEdges[key],
                   standardQuantitiesHighEdges[key]))
 
+            for fc_key in ['f1', 'f3', 'weta2', 'reta', 'eratio']:
+              sg.addHistogram(TH1F('fc_%s' %(fc_key), 
+                  ('%s;%s;Count')%(electronQuantities[fc_key],electronQuantities[fc_key]),
+                  standardQuantitiesNBins[fc_key],
+                  standardQuantitiesLowerEdges[fc_key],
+                  standardQuantitiesHighEdges[fc_key]))
             # loop over selections
 
     # loop over pairs
@@ -152,6 +158,7 @@ class ImpactTool( Algorithm ):
     if self._dataframe is DataframeEnum.Electron_v1:
       off_elCont    = context.getHandler( "ElectronContainer" )
       hlt_elCont    = context.getHandler( "HLT__ElectronContainer" )
+      fastcalo_Cont = context.getHandler( "HLT__TrigEMClusterContainer")
     elif self._dataframe is DataframeEnum.Photon_v1:
       elCont    = context.getHandler( "PhotonContainer" )
     else:
@@ -233,6 +240,15 @@ class ImpactTool( Algorithm ):
         sg.histogram(dirname+'/hlt_eratio').Fill(hlt_elCont.eratio(),pw)
         sg.histogram(dirname+'/hlt_deltaEta1').Fill(hlt_elCont.deltaEta1(),pw)
         sg.histogram(dirname+'/hlt_deltaPhiRescaled2').Fill(hlt_elCont.deltaPhiRescaled2(),pw)
+
+        # fastcalo
+        sg.histogram(dirname+'/fc_f1').Fill(fastcalo_Cont.f1(),pw)
+        sg.histogram(dirname+'/fc_f3').Fill(fastcalo_Cont.f3(),pw)
+        sg.histogram(dirname+'/fc_weta2').Fill(fastcalo_Cont.weta2(),pw)
+        #sg.histogram(dirname+'/fc_wtots').Fill(fastcalo_Cont.wtots(),pw)
+        sg.histogram(dirname+'/fc_reta').Fill(fastcalo_Cont.reta(),pw)
+        sg.histogram(dirname+'/fc_eratio').Fill(fastcalo_Cont.eratio(),pw)
+
         # Fill track variables
         if track:
           # off

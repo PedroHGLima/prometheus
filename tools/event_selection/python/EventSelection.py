@@ -173,10 +173,10 @@ class EventSelection( Algorithm ):
         MSG_DEBUG( self, 'Z: is not Z! reject')
         return StatusCode.SUCCESS
 
-      #elif key is SelectionType.SelectionRunNumber and (eventInfo.RunNumber != value):
-      #  self.wtd = StatusWTD.ENABLE
-      #  MSG_DEBUG( self, 'Reject event by RunNumber. skip...')
-      #  return StatusCode.SUCCESS
+      elif key is SelectionType.SelectionRunNumber and (int(eventInfo.RunNumber()) != int(value)):
+        self.wtd = StatusWTD.ENABLE
+        MSG_DEBUG( self, 'Reject event by RunNumber. skip...')
+        return StatusCode.SUCCESS
 
       # Offline recostruction cut by PID selectors
       elif key is SelectionType.SelectionPID:
