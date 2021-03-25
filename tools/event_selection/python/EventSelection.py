@@ -52,6 +52,16 @@ class SelectionType(EnumStringification):
   SelectionPID = 8
   # @brief: Select events with trig electron container > 0
   SelectionOnlineWithTrigElectrons = 9
+  # @brief: Select events by its origin (only for MC data)
+  SelectionFromOrigin = 10
+  
+  SelectionFromType = 11
+
+  SelectionPhoton = 12
+
+  SelectionJet = 13
+
+
 
 
 
@@ -178,6 +188,16 @@ class EventSelection( Algorithm ):
         MSG_DEBUG( self, 'Reject event by RunNumber. skip...')
         return StatusCode.SUCCESS
 
+      elif key is SelectionType.SelectionPhoton and  not mc.isTruthPhotonFromAny():
+        self.wtd = StatusWTD.ENABLE
+        MSG_DEBUG( self, 'Photon: is not Photon! reject')
+        return StatusCode.SUCCESS
+
+      elif key is SelectionType.SelectionJet and not mc.isTruthJetFromAny():
+        self.wtd = StatusWTD.ENABLE
+        MSG_DEBUG( self, 'Jet: is not Jet! reject')
+        return StatusCode.SUCCESS
+
       # Offline recostruction cut by PID selectors
       elif key is SelectionType.SelectionPID:
         pidname = value
@@ -200,6 +220,20 @@ class EventSelection( Algorithm ):
           return StatusCode.SUCCESS
         if not isVeto and not passed:
           self.wtd = StatusWTD.ENABLE
+          return StatusCode.SUCCESS
+      
+      elif key is SelectionType.SelectionFromOrigin:
+        origin = mc.origin()
+        if origin != value:
+          self.wtd = StatusWTD.ENABLE
+          MSG_DEBUG( self, 'Reproved by Origin value. Origin = %1.3f != OriginCut = %1.3f',mc.origin(),value)
+          return StatusCode.SUCCESS
+      
+      elif key is SelectionType.SelectionFromType:
+        type = mc.type()
+        if type != value:
+          self.wtd = StatusWTD.ENABLE
+          MSG_DEBUG( self, 'Reproved by Type value. Type = %1.3f != TypeCut = %1.3f',mc.type(),value)
           return StatusCode.SUCCESS
       else:
         MSG_DEBUG( self, 'Selection cut (%s) approved.',key)

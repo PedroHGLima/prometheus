@@ -11,6 +11,8 @@ __all__ =  [
             "installElectronL2CaloRingerSelector_v9",
             "installElectronL2CaloRingerSelector_v10",
             "installElectronL2CaloRingerSelector_v11",
+
+            # zee_el for electron signatures
             "installElectronL2RingerSelector_v1_el",
             "installElectronL2RingerSelector_v2_el",
 
@@ -115,8 +117,8 @@ def installTrigEgammaL2CaloSelectors():
       TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloMedium"  , OperationPoint ='lhmedium' ) ,
       TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloLoose"   , OperationPoint ='lhloose'  ) ,
       TrigEgammaL2CaloSelectorTool("T0HLTElectronT2CaloVLoose"  , OperationPoint ='lhvloose' ) ,
-    ]  
-  
+    ]
+
   return attach(hypos)
 
 
@@ -127,8 +129,8 @@ def installTrigEgammaL2PhotonCaloSelectors():
       TrigEgammaL2CaloSelectorTool("T0HLTPhotonT2CaloTight"   , OperationPoint ='tight'  ) ,
       TrigEgammaL2CaloSelectorTool("T0HLTPhotonT2CaloMedium"  , OperationPoint ='medium' ) ,
       TrigEgammaL2CaloSelectorTool("T0HLTPhotonT2CaloLoose"   , OperationPoint ='loose'  ) ,
-    ]  
-  
+    ]
+
   return attach(hypos)
 
 def installTrigEgammaL2ElectronSelectors():
@@ -206,7 +208,7 @@ def installElectronL2CaloRingerSelector_v9():
 
   from TrigEgammaEmulationTool import RingerSelectorTool
   import os
-  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20201204_v9'
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20210306_v9'
 
 
   def getPatterns( context ):
@@ -248,8 +250,7 @@ def installElectronL2CaloRingerSelector_v10():
 
   from TrigEgammaEmulationTool import RingerSelectorTool
   import os
-  #calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20200715_v10'
-  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20201204_v10'
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20210306_v10'
 
   def getPatterns( context ):
     def norm1( data ):
@@ -281,7 +282,7 @@ def installElectronL2CaloRingerSelector_v11():
 
   from TrigEgammaEmulationTool import RingerSelectorTool
   import os
-  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20201204_v11'
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20210306_v11'
 
 
   def getPatterns( context ):
@@ -324,7 +325,7 @@ def installElectronL2RingerSelector_v1_el():
 
   from TrigEgammaEmulationTool import RingerSelectorTool
   import os
-  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20201204_v1_el'
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee_el/TrigL2_20210306_v1'
 
 
   def getPatterns( context ):
@@ -378,7 +379,7 @@ def installElectronL2RingerSelector_v2_el():
 
   from TrigEgammaEmulationTool import RingerSelectorTool
   import os
-  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20201204_v2_el'
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee_el/TrigL2_20210306_v2'
 
   def getPatterns( context ):
     def norm1( data ):
@@ -440,7 +441,7 @@ def installPhotonL2CaloRingerSelector_v1():
     fc = context.getHandler("HLT__TrigEMClusterContainer")
     rings = norm1( fc.ringsE() )
     return [rings]
-  
+
   hypos = [
               RingerSelectorTool( "T0HLTPhotonRingerTight_v1" ,getPatterns  , ConfigFile = calibpath+'/PhotonRingerTightTriggerConfig.conf' ),
               RingerSelectorTool( "T0HLTPhotonRingerMedium_v1",getPatterns  , ConfigFile = calibpath+'/PhotonRingerMediumTriggerConfig.conf'),
