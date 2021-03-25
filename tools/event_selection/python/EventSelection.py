@@ -183,6 +183,11 @@ class EventSelection( Algorithm ):
         MSG_DEBUG( self, 'Z: is not Z! reject')
         return StatusCode.SUCCESS
 
+      elif key is SelectionType.SelectionRunNumber and (int(eventInfo.RunNumber()) != int(value)):
+        self.wtd = StatusWTD.ENABLE
+        MSG_DEBUG( self, 'Reject event by RunNumber. skip...')
+        return StatusCode.SUCCESS
+
       elif key is SelectionType.SelectionPhoton and  not mc.isTruthPhotonFromAny():
         self.wtd = StatusWTD.ENABLE
         MSG_DEBUG( self, 'Photon: is not Photon! reject')
@@ -192,11 +197,6 @@ class EventSelection( Algorithm ):
         self.wtd = StatusWTD.ENABLE
         MSG_DEBUG( self, 'Jet: is not Jet! reject')
         return StatusCode.SUCCESS
-
-      #elif key is SelectionType.SelectionRunNumber and (eventInfo.RunNumber != value):
-      #  self.wtd = StatusWTD.ENABLE
-      #  MSG_DEBUG( self, 'Reject event by RunNumber. skip...')
-      #  return StatusCode.SUCCESS
 
       # Offline recostruction cut by PID selectors
       elif key is SelectionType.SelectionPID:
