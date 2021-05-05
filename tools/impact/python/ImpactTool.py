@@ -122,7 +122,7 @@ class ImpactTool( Algorithm ):
 
             # we want measure this
             for itype in ['off', 'hlt']:
-              for key in standardQuantitiesNBins.keys():
+              for key in ['f1', 'f3', 'weta2', 'wtots1', 'rphi', 'deltaEta1', 'deltaPhiRescaled2', 'eratio', 'reta', 'rhad']:
                 sg.addHistogram(TH1F('%s_%s' %(itype, key), 
                   ('%s;%s;Count')%(electronQuantities[key],electronQuantities[key]),
                   standardQuantitiesNBins[key],
@@ -172,8 +172,7 @@ class ImpactTool( Algorithm ):
     # Retrieve container
     if self._dataframe is DataframeEnum.Electron_v1:
       off_track = off_elCont.trackParticle()
-      hlt_track = hlt_elCont.trackParticle()
-      track = True
+      track = False
     elif self._dataframe is DataframeEnum.Photon_v1:
       track = False
 
