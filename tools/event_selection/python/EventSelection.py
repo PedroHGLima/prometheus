@@ -16,16 +16,16 @@ from prometheus import Dataframe as DataframeEnum
 # Enumeration et cut type
 #
 class EtCutType(EnumStringification):
-  OfflineAbove =  5
-  OfflineBelow = -5
-  L1CaloAbove  =  1
-  L1CaloBelow  = -1
-  L2CaloAbove  =  2
-  L2CaloBelow  = -2
-  EFCaloAbove  =  3
-  EFCaloBelow  = -3
-  HLTAbove     =  4
-  HLTBelow     = -4
+  OfflineAbove = -1
+  OfflineBelow = -2
+  L1CaloAbove  = -3
+  L1CaloBelow  = -4
+  L2CaloAbove  = -5
+  L2CaloBelow  = -6
+  EFCaloAbove  = -7
+  EFCaloBelow  = -8
+  HLTAbove     = -9
+  HLTBelow     = -10
 
 
 #
