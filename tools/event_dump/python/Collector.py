@@ -114,8 +114,6 @@ class Collector( Algorithm ):
     
     if self._dataframe is DataframeEnum.Electron_v1:
       self._event_label.extend( [
-                                'deltaR', #for boosted
-                                'eeMass', #for boosted
                                 # Offline variables
                                 'el_lhtight',
                                 'el_lhmedium',
@@ -267,8 +265,6 @@ class Collector( Algorithm ):
       event_row.append( elCont.accept( "el_lhmedium" ) )
       event_row.append( elCont.accept( "el_lhloose"  ) )
       event_row.append( elCont.accept( "el_lhvloose" ) )
-      event_row.append( elCont.deltaR() )
-      event_row.append( elCont.eeMass() )
  
 
 

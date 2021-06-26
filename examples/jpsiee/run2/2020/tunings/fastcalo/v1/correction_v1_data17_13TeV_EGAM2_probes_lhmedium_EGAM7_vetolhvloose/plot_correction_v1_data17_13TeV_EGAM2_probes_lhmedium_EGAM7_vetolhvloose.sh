@@ -1,6 +1,0 @@
-
-
-python3 plot_correction_v1_data17_13TeV_EGAM2_probes_lhmedium_EGAM7_vetolhvloose.py -i ../phd_data/correction_v1_data17_13TeV_EGAM2_probes_lhmedium_EGAM7_vetolhvloose/data17_13TeV_EGAM2_probes_lhmedium_EGAM7_vetolhvloose.v1.correction.root -o correction_data17_EGAM2_probes_lhmedium_v1
-
-
-
