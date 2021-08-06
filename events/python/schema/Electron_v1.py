@@ -47,7 +47,10 @@ def Electron_v1():
 	    float               el_e277;
 	    std::vector<float> *el_etCone;
 	    std::vector<float> *el_ptCone;
-
+		
+		float               el_tap_deltaR;
+		float               el_tap_mass;
+		
 	    float               el_trk_pt;
 	    float               el_trk_eta;
 	    float               el_trk_charge;

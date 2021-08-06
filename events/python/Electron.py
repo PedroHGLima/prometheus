@@ -219,6 +219,10 @@ class Electron(EDM):
 
                           'el_etCone',
                           'el_ptCone',
+                          
+                          # boosted
+                          'el_tap_deltaR',
+                          'el_tap_mass',
 
                         ],
                         'HLT__Electron':[
@@ -620,7 +624,11 @@ class Electron(EDM):
       if self._is_hlt:
         return -999
       else:
-        return -999
+        try:
+          return self._event.el_tap_mass
+        except:
+          self._logger.warning("Impossible to retrieve the value of eeMass. Unknow dataframe.")
+          return -999
     else:
       self._logger.warning("Impossible to retrieve the value of eeMass. Unknow dataframe.")
       return -999
@@ -634,7 +642,11 @@ class Electron(EDM):
       if self._is_hlt:
         return -999
       else:
-        return -999
+        try:
+          return self._event.el_tap_deltaR
+        except:
+          self._logger.warning("Impossible to retrieve the value of deltaR.")
+          return -999
     else:
       self._logger.warning("Impossible to retrieve the value of deltaR. Unknow dataframe.")
       return -999
