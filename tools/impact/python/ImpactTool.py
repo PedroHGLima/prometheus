@@ -121,7 +121,6 @@ class ImpactTool( Algorithm ):
           m_dirname = basepath+'/'+chain.name()+ '/' + binning_name
           sg.mkdir( m_dirname )
 
-          print(m_dirname)
           sg.addHistogram(TH1F('et', ('%s;%s;Count')%(basicInfoQuantities['et'],basicInfoQuantities['et']), 
                                 basicInfoNBins['et'],basicInfoLowerEdges['et'],basicInfoHighEdges['et']) )
           sg.addHistogram(TH1F('eta' , ('%s;%s;Count')%(basicInfoQuantities['eta'],basicInfoQuantities['eta']),

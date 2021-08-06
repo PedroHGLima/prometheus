@@ -93,6 +93,12 @@ class EfficiencyTool( Algorithm ):
         sg.addHistogram( TH2F('etVsEta' , "Total;E_{T};#eta;Count", len(et_bins)-1,  np.array(et_bins), len(eta_bins)-1, np.array(eta_bins)) )
         sg.addHistogram( TProfile2D('eff_etVsEta' , "Total;E_{T};#eta;Count", len(et_bins)-1,  np.array(et_bins), len(eta_bins)-1, np.array(eta_bins)) )
 
+        # for boosted analysis
+        deltaR_bins = np.arange(0, 5, step=0.1)
+        sg.addHistogram(TH1F('deltaR','#\Delta R distribution;#\Delta R;Count', len(deltaR_bins)-1, deltaR_bins))
+        sg.addHistogram(TH1F('match_deltaR','#\Delta R matched distribution;#\Delta R;Count', len(deltaR_bins)-1, deltaR_bins))
+        sg.addHistogram(TProfile('eff_deltaR', "#\epsilon(#\Delta R); #\Delta R ; Efficiency" , len(deltaR_bins)-1, deltaR_bins))
+
     self.init_lock()
     return StatusCode.SUCCESS 
 
@@ -151,6 +157,7 @@ class EfficiencyTool( Algorithm ):
     nvtx = evt.nvtx()
     pw = evt.MCPileupWeight()
 
+    deltaR = el.deltaR()
     if pid: 
       sg.histogram( dirname+'/et' ).Fill(et, pw)
       if et > etthr+1.0:
@@ -159,6 +166,8 @@ class EfficiencyTool( Algorithm ):
         sg.histogram( dirname+'/mu' ).Fill(avgmu, pw)
         sg.histogram( dirname+'/nvtx' ).Fill(nvtx, pw)
         sg.histogram( dirname+'/etVsEta' ).Fill(et,eta, pw)
+
+        sg.histogram( dirname+'/deltaR' ).Fill(deltaR, pw)
 
       if isPassed:
         sg.histogram( dirname+'/match_et' ).Fill(et, pw)
@@ -169,12 +178,17 @@ class EfficiencyTool( Algorithm ):
           sg.histogram( dirname+'/match_phi' ).Fill(phi, pw)
           sg.histogram( dirname+'/match_mu' ).Fill(avgmu, pw)
           sg.histogram( dirname+'/match_nvtx' ).Fill(nvtx, pw)
+          
+          sg.histogram( dirname+'/match_deltaR' ).Fill(deltaR, pw)
+          
           sg.histogram( dirname+'/match_etVsEta' ).Fill(et,eta, pw)
           sg.histogram( dirname+'/eff_eta' ).Fill(eta,1, pw)
           sg.histogram( dirname+'/eff_phi' ).Fill(phi,1, pw)
           sg.histogram( dirname+'/eff_mu' ).Fill(avgmu,1, pw)
           sg.histogram( dirname+'/eff_nvtx' ).Fill(nvtx,1, pw)
           sg.histogram( dirname+'/eff_etVsEta' ).Fill(et,eta,1, pw)
+
+          sg.histogram( dirname+'/eff_deltaR' ).Fill(deltaR, 1, pw)
 
       else:
         sg.histogram( dirname+'/eff_et' ).Fill(et,0)
@@ -184,6 +198,8 @@ class EfficiencyTool( Algorithm ):
           sg.histogram( dirname+'/eff_mu' ).Fill(avgmu,0, pw)
           sg.histogram( dirname+'/eff_nvtx' ).Fill(nvtx,0, pw)
           sg.histogram( dirname+'/eff_etVsEta' ).Fill(et,eta,0, pw)
+          # for boosted 
+          sg.histogram( dirname+'/eff_deltaR' ).Fill(deltaR,0, pw)
 
 
 
