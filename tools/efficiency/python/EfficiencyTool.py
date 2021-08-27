@@ -1,7 +1,6 @@
 
 __all__ = ['EfficiencyTool']
 
-
 # core
 from Gaugi import GeV
 from Gaugi import Algorithm
@@ -96,7 +95,7 @@ class EfficiencyTool( Algorithm ):
         sg.addHistogram( TProfile2D('eff_etVsEta' , "Total;E_{T};#eta;Count", len(et_bins)-1,  np.array(et_bins), len(eta_bins)-1, np.array(eta_bins)) )
 
         # for boosted analysis
-        deltaR_bins = np.arange(0, 2.5, step=0.1)
+        deltaR_bins = np.arange(0, np.max(eta_bins), step=0.1)
         sg.addHistogram(TH1F('deltaR','#\Delta R distribution;#\Delta R;Count', len(deltaR_bins)-1, deltaR_bins))
         sg.addHistogram(TH1F('match_deltaR','#\Delta R matched distribution;#\Delta R;Count', len(deltaR_bins)-1, deltaR_bins))
         sg.addHistogram(TProfile('eff_deltaR', "#\epsilon(#\Delta R); #\Delta R ; Efficiency" , len(deltaR_bins)-1, deltaR_bins))
