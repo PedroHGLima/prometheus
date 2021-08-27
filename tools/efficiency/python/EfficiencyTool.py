@@ -27,7 +27,7 @@ class EfficiencyTool( Algorithm ):
   #
   # Constructor
   #
-  def __init__(self, name, dojpsiee=False, **kw):
+  def __init__(self, name, dojpsiee=False, eta_bins=None, **kw):
 
     Algorithm.__init__(self, name)
     self.__groups = list()
@@ -39,6 +39,8 @@ class EfficiencyTool( Algorithm ):
     # Set property values using the constructor args
     for key, value in kw.items():
       self.setProperty(key, value)
+
+    self.eta_bins = default_etabins if eta_bins is None else eta_bins  # correction for new eta bins
 
   #
   # Add trigger group to the monitoring list
@@ -63,7 +65,7 @@ class EfficiencyTool( Algorithm ):
     sg = self.getStoreGateSvc()
     
     #et_bins  = zee_etbins
-    eta_bins = default_etabins
+    eta_bins = self.eta_bins
     nvtx_bins.extend(high_nvtx_bins)
     #eta_bins = [0,0.6,0.8,1.15,1.37,1.52,1.81,2.01,2.37,2.47]
     et_bins = jpsiee_etbins if doJpsiee else [4.,7.,10.,15.,20.,25.,30.,35.,40.,45.,50.,60.,80.,150.,300.] 
