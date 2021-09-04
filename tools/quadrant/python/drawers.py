@@ -164,8 +164,10 @@ def PlotQuantities( sg, basepath, key, outname, legends, drawopt='hist', divide=
   #               , drawAxis=True, axisColor=(ROOT.kRed+1), ignorezeros=False, ignoreErrors=True, label = "Ringer Rejected [%]")
 
   outcan.SaveAs( outname+'.C' ) 
+  outname_png = outname+'.png'
   outname = outname+'.pdf'
   outcan.SaveAs( outname ) 
+  outcan.SaveAs( outname_png ) 
   return outname
 
 
