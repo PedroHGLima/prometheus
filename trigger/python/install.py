@@ -8,6 +8,7 @@ __all__ =  [
             # Zee for electrons signatures
             "installElectronL2CaloRingerSelector_v6",
             "installElectronL2CaloRingerSelector_v8",
+            "installElectronL2CaloRingerSelector_v8_1", # natmourajr new line!!!
             "installElectronL2CaloRingerSelector_v9",
             "installElectronL2CaloRingerSelector_v10",
             "installElectronL2CaloRingerSelector_v11",
@@ -41,6 +42,7 @@ def installElectronRingerZeeFromVersion( key , step="fast_calo"):
                   # Zee
                   "v6"                 : installElectronL2CaloRingerSelector_v6(),
                   "v8"                 : installElectronL2CaloRingerSelector_v8(),
+                  "v8.1"               : installElectronL2CaloRingerSelector_v8_1(),
                   "v9"                 : installElectronL2CaloRingerSelector_v9(),
                   "v10"                : installElectronL2CaloRingerSelector_v10(),
                   "v11"                : installElectronL2CaloRingerSelector_v11(),
@@ -194,6 +196,62 @@ def installElectronL2CaloRingerSelector_v8():
       RingerSelectorTool( "T0HLTElectronRingerMedium_v8"   ,getPatterns, ConfigFile = calibpath+'/ElectronRingerMediumTriggerConfig.conf'    ),
       RingerSelectorTool( "T0HLTElectronRingerLoose_v8"    ,getPatterns, ConfigFile = calibpath+'/ElectronRingerLooseTriggerConfig.conf'     ),
       RingerSelectorTool( "T0HLTElectronRingerVeryLoose_v8",getPatterns, ConfigFile = calibpath+'/ElectronRingerVeryLooseTriggerConfig.conf' ),
+    ]
+
+  return attach(hypos)
+
+
+###########################################################
+################## natmourajr v8.1 tuning ###################
+###########################################################
+def installElectronL2CaloRingerSelector_v8_1():
+
+  from TrigEgammaEmulationTool import RingerSelectorTool
+  import os
+  calibpath = os.environ['PRT_PATH'] + '/trigger/data/zee/TrigL2_20210907_v8.1'
+
+  def getPatterns( context ):
+    def norm1_half_ringer( data ):
+      # rings presmaple 
+      presample = [iring for iring in range(8//2)]
+
+      # EM1 list
+      sum_rings = 8
+      em1 = [iring for iring in range(sum_rings, sum_rings+(64//2))]
+
+      # EM2 list
+      sum_rings = 8+64
+      em2 = [iring for iring in range(sum_rings, sum_rings+(8//2))]
+
+      # EM3 list
+      sum_rings = 8+64+8
+      em3 = [iring for iring in range(sum_rings, sum_rings+(8//2))]
+
+      # HAD1 list
+      sum_rings = 8+64+8+8
+      had1 = [iring for iring in range(sum_rings, sum_rings+(4//2))]
+
+      # HAD2 list
+      sum_rings = 8+64+8+8+4
+      had2 = [iring for iring in range(sum_rings, sum_rings+(4//2))]
+
+      # HAD3 list
+      sum_rings = 8+64+8+8+4+4
+      had3 = [iring for iring in range(sum_rings, sum_rings+(4//2))]
+
+      selection_list = presample+em1+em2+em3+had1+had2+had3
+      data = data[selection_list]
+      return (data/abs(sum(data))).reshape((1,len(selection_list)))
+    fc = context.getHandler("HLT__TrigEMClusterContainer")
+    rings = norm1_half_ringer( fc.ringsE() )
+    return [rings]
+
+
+  hypos = [
+      RingerSelectorTool( "T0HLTElectronRingerTight_v8.1"    ,getPatterns, ConfigFile = calibpath+'/ElectronRingerTightTriggerConfig.conf'     ),
+      RingerSelectorTool( "T0HLTElectronRingerMedium_v8.1"   ,getPatterns, ConfigFile = calibpath+'/ElectronRingerMediumTriggerConfig.conf'    ),
+      RingerSelectorTool( "T0HLTElectronRingerLoose_v8.1"    ,getPatterns, ConfigFile = calibpath+'/ElectronRingerLooseTriggerConfig.conf'     ),
+      RingerSelectorTool( "T0HLTElectronRingerVeryLoose_v8.1",getPatterns, ConfigFile = calibpath+'/ElectronRingerVeryLooseTriggerConfig.conf' ),
     ]
 
   return attach(hypos)
