@@ -194,7 +194,7 @@ class EfficiencyTool( Algorithm ):
           sg.histogram( dirname+'/eff_etVsEta' ).Fill(et,eta,1, pw)
 
           sg.histogram( dirname+'/eff_deltaR' ).Fill(deltaR, 1, pw)
-          sg.histogram( dirname+'/EtVsDeltaR' ).Fill(et,deltaR, pw)
+          sg.histogram( dirname+'/EtVsDeltaR' ).Fill(et,deltaR,1, pw)
 
       else:
         sg.histogram( dirname+'/eff_et' ).Fill(et,0)
