@@ -100,7 +100,7 @@ class EfficiencyTool( Algorithm ):
         sg.addHistogram(TH1F('deltaR','#\Delta R distribution;#\Delta R;Count', len(deltaR_bins)-1, deltaR_bins))
         sg.addHistogram(TH1F('match_deltaR','#\Delta R matched distribution;#\Delta R;Count', len(deltaR_bins)-1, deltaR_bins))
         sg.addHistogram(TProfile('eff_deltaR', "#\epsilon(#\Delta R); #\Delta R ; Efficiency" , len(deltaR_bins)-1, deltaR_bins))
-        sg.addHistogram(TH2F('EtVsDeltaR','E_{T};#\Delta R;Count', len(et_bins)-1, np.array(et_bins), len(deltaR_bins)-1, deltaR_bins))
+        #sg.addHistogram(TH2F('EtVsDeltaR','E_{T};#\Delta R;Count', len(et_bins)-1, np.array(et_bins), len(deltaR_bins)-1, deltaR_bins))
 
     self.init_lock()
     return StatusCode.SUCCESS 
@@ -171,7 +171,7 @@ class EfficiencyTool( Algorithm ):
         sg.histogram( dirname+'/etVsEta' ).Fill(et,eta, pw)
 
         sg.histogram( dirname+'/deltaR' ).Fill(deltaR, pw)
-        sg.histogram( dirname+'/EtVsDeltaR' ).Fill(et,deltaR, pw)
+        #sg.histogram( dirname+'/EtVsDeltaR' ).Fill(et,deltaR, pw)
         
 
       if isPassed:
@@ -194,7 +194,7 @@ class EfficiencyTool( Algorithm ):
           sg.histogram( dirname+'/eff_etVsEta' ).Fill(et,eta,1, pw)
 
           sg.histogram( dirname+'/eff_deltaR' ).Fill(deltaR, 1, pw)
-          sg.histogram( dirname+'/EtVsDeltaR' ).Fill(et,deltaR,1, pw)
+          #sg.histogram( dirname+'/EtVsDeltaR' ).Fill(et,deltaR,1, pw)
 
       else:
         sg.histogram( dirname+'/eff_et' ).Fill(et,0)
